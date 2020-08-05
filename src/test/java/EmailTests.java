@@ -5,6 +5,7 @@ import emailCode.EmailUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.testng.annotations.Test;
 
 public class EmailTests {
@@ -25,7 +26,7 @@ public class EmailTests {
 
         Message[] messagesTo = email.getMessagesTo("testerattentive@gmail.com");
         System.out.println("The number of emails TO testerattentive@gmail.com is: " + messagesTo.length);
-        System.out.println("Last message TO testerattentive@gmail.com is FROM :" + email.getEmailPojo(messagesTo[0]).getFrom());
+        System.out.println("Last message TO testerattentive@gmail.com is FROM: " + email.getEmailPojo(messagesTo[0]).getFrom());
 
         Message[] messagesFrom = email.getMessagesFrom("mail-noreply@google.com");
         System.out.println("The number of emails FROM mail-noreply@google.com is: " + messagesFrom.length);
@@ -36,10 +37,19 @@ public class EmailTests {
         Message[] messagesToWithSubject = email.getMessagesToWithSubject("testerattentive@gmail.com", "Your Spotio password has been updated");
         String html = email.getEmailPojo(messagesToWithSubject[0]).getBodyHtml();
         Document doc = Jsoup.parse(html);
+
         String name = doc.select("p").first().text().split(",")[0];
-        //String link = doc.select("a").first().text();
         System.out.println("The user name is: " + name);
-        //System.out.println("The link is: " + link);
+
+        //String link = doc.select("a[href]").attr("href");
+        Elements allText = doc.select("b");
+        //Elements links = doc.select("a[href]");
+        for (Element text : allText) {
+            System.out.println("Text: " + text.text());
+        }
+
+        String link = doc.select("img").attr("src");
+        System.out.println("The link is: " + link);
 
         //System.out.println(html);
 
